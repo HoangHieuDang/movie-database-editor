@@ -1,8 +1,6 @@
 import json
 import random
 import matplotlib.pyplot as plt
-import numpy as np
-from thefuzz import fuzz
 from thefuzz import process
 from colorama import Fore, Back, Style
 
