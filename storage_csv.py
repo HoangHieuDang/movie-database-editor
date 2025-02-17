@@ -1,25 +1,24 @@
 from istorage import IStorage
-import json
+import csv
 import os
 from colorama import Fore
 
-
-class StorageJson(IStorage):
+class StorageCsv(IStorage):
     def __init__(self, file_path):
         try:
             if not os.path.exists(file_path):
-                if file_path.endswith(".json"):
+                if file_path.endswith(".csv"):
                     with open(file_path, 'x') as fileobj:
                         fileobj.close()
                 else:
                     raise Exception("File name is not valid")
 
-            if file_path.endswith(".json") and os.path.exists(file_path):
+            if file_path.endswith(".csv") and os.path.exists(file_path):
                 self._file_path = file_path
             else:
-                raise Exception(".json file only and make sure that the file exists in current directory!")
+                raise Exception(".csv file only and make sure that the file exists in current directory!")
         except Exception as e:
-            print("Can not create Json Storage: " + str(e))
+            print("Can not create csv Storage: " + str(e))
 
     def list_movies(self):
         movies_dict = open_database(self._file_path)
@@ -63,58 +62,35 @@ class StorageJson(IStorage):
 
 def open_database(file_path):
     """
-    open json database and return the pythonic data
+    open csv database and return the dictionary structure {"Titanic": {"rating": 9.8, "year": 2001}}
     """
     try:
         with open(file_path, "r") as fileobj:
-            data = json.load(fileobj)
-        if data:
-            return data
-        else:
-            raise Exception("json file is empty")
+            data = csv.reader(fileobj)
+            if data:
+                movie_dict = dict()
+                list_of_lines = []
+                for lines in data:
+                    list_of_lines.append(lines)
+                for line in list_of_lines[1:]:
+                    if line and len(line) == 3:
+                        movie_dict[line[0]] = {"rating":line[1],"year":line[2]}
+                return movie_dict
+            else:
+                raise Exception("csv file is empty")
     except Exception as e:
         error_msg = Fore.RED + "Something went wrong when connecting to the database!\n" + str(e)
         return error_msg
 
-
 def write_database(input_data, file_path):
     """
-    write data into json database
+    write data into csv database
     """
+    list_data = [
+        ['Movie', 'Rating', 'Year']
+    ]
+    for data in input_data:
+        list_data.append([data, input_data[data]["rating"], input_data[data]["year"]])
     with open(file_path, "w") as fileobj:
-        fileobj.write(json.dumps(input_data))
-
-
-"""
-# ------------------------Sanity Test--------------------------------------------
-# -------------------------------------------------------------------------------
-# -------------------------------------------------------------------------------
-new_storage = StorageJson("movie_database.json")
-print("__________list movies_______________")
-print("____________________________________")
-print(new_storage.list_movies())
-print("__________add movies_______________")
-print("____________________________________")
-new_storage.add_movie("Long legs", 2023, 7.5)
-print("__________list movies_______________")
-print("____________________________________")
-print(new_storage.list_movies())
-print("__________delete movies_______________")
-print("____________________________________")
-new_storage.delete_movie("Long legs")
-print("__________list movies_______________")
-print("____________________________________")
-print(new_storage.list_movies())
-print("__________add movies_______________")
-print("____________________________________")
-new_storage.add_movie("PS I love you", year=2002, rating=0.5)
-print("__________list movies_______________")
-print("____________________________________")
-print(new_storage.list_movies())
-print("__________update movies_______________")
-print("____________________________________")
-print(new_storage.update_movie("PS I love you", 1.0))
-print("__________list movies_______________")
-print("____________________________________")
-print(new_storage.list_movies())
-"""
+        writer = csv.writer(fileobj)
+        writer.writerows(list_data)
