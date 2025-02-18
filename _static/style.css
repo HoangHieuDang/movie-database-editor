@@ -23,7 +23,7 @@ body {
 
 .movie-grid li {
   padding: 10px 15px;
-  text-align: left;
+  text-align: center;
 }
 
 .movie {

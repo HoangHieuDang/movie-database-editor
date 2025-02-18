@@ -10,7 +10,7 @@ from storage_csv import StorageCsv
 import requests
 from dotenv import load_dotenv
 
-#loading environment variables
+# loading environment variables
 load_dotenv()
 OMDB_KEY = os.getenv('OMDB_API_KEY')
 """
@@ -345,8 +345,54 @@ class MovieApp:
         print(Style.RESET_ALL)
         sys.exit(0)
 
-    def _generate_website(self):
-        pass
+    def _command_generate_website(self):
+        """
+        Generate a website to show all movies in the
+        database
+        """
+        data = self._storage.list_movies()
+        # Create html div elements for each  movie in the database
+        movie_grid_html = f""
+        for title, details in data.items():
+            movie_grid_html += f"""
+            <div class="movie">
+                <img src="{details['poster_url']}" alt="{title}">
+                <h2>{title} ({details['year']})</h2>
+                <p>{details['rating']}</p>
+            </div>
+            """
+        # open the html template and get all html content from the template
+        with open("./_static/index_template.html", "r") as fileobj:
+            html_template_content = fileobj.read()
+
+        # replace the generated contents and title
+        # with the template holders inside the html template content
+        if html_template_content:
+            if "__TEMPLATE_TITLE__" in html_template_content:
+                html_template_content = html_template_content.replace("__TEMPLATE_TITLE__", "My Must-Watch Collection")
+            else:
+                print("Can not find the template holder for Title!")
+                return None
+            if "__TEMPLATE_MOVIE_GRID__" in html_template_content:
+                html_template_content = html_template_content.replace("__TEMPLATE_MOVIE_GRID__", movie_grid_html)
+            else:
+                print("Can not find the template holder for Movie Grid")
+                return None
+            # Save the modified content into a new html file
+            try:
+                with open("./_static/index.html", "w") as fileobj:
+                    fileobj.write(html_template_content)
+            except Exception as err:
+                print("Something is wrong when creating the index html:" + str(err))
+                return None
+            else:
+                print("The website is successfully generated!")
+        else:
+            return "Can not find or open the html_template file"
+
+
+
+
 
     def run(self):
         """
@@ -367,7 +413,8 @@ class MovieApp:
          8. Movies sorted by rating
          9. Movies sorted by year
          10. Filter movies
-         11. Create Rating Histogram\n'''
+         11. Create Rating Histogram
+         12. Generate website\n'''
         print(menu_options_print)
 
         # Create a menu dispatcher dictionary
@@ -384,15 +431,16 @@ class MovieApp:
             "8": self._command_sort_movies_by_rating,
             "9": self._command_movie_sorted_by_year,
             "10": self._command_filter_movie,
-            "11": self._command_rating_histogram
+            "11": self._command_rating_histogram,
+            "12": self._command_generate_website
         }
         # Get use command
         # Handle user input for choosing the operation options
         while True:
             try:
-                user_input = int(input(Fore.GREEN + "Please choose an option by entering a number between 0 to 11: "))
-                if user_input < 0 or user_input > 11:
-                    raise ValueError(Fore.RED + "The number must be in range of [0,11]")
+                user_input = int(input(Fore.GREEN + "Please choose an option by entering a number between 0 to 12: "))
+                if user_input < 0 or user_input > 12:
+                    raise ValueError(Fore.RED + "The number must be in range of [0,12]")
             except ValueError as error_msg:
                 print(Fore.RED + str(error_msg))
                 print(Style.RESET_ALL)
