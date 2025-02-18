@@ -1,16 +1,2 @@
-Movie,Rating,Year
-Titanic,9.8,2001
-Inception,9.6,2010
-The Matrix,9.0,1999
-The Godfather,9.8,1972
-Pulp Fiction,9.4,1994
-Forrest Gump,9.2,1994
-The Dark Knight,9.8,2008
-Fight Club,8.8,1999
-Interstellar,9.4,2014
-The Shawshank Redemption,9.8,1994
-Alien,8.5,1990
-Harry Potter 1,9.5,2000
-Starwars,9.5,1993
-PS I love you,1.0,2002
-Litte Sheep,5.5,2005
+title,rating,year,poster_url
+Titanic,7.9,1997,https://m.media-amazon.com/images/M/MV5BYzYyN2FiZmUtYWYzMy00MzViLWJkZTMtOGY1ZjgzNWMwN2YxXkEyXkFqcGc@._V1_SX300.jpg

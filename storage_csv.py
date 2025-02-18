@@ -24,12 +24,13 @@ class StorageCsv(IStorage):
         movies_dict = open_database(self._file_path)
         return movies_dict
 
-    def add_movie(self, title, year, rating):
+    def add_movie(self, title, year, rating, poster_url):
         data = open_database(self._file_path)
         if title not in data:
             data[title] = {
                 "rating": rating,
-                "year": year
+                "year": year,
+                "poster_url": poster_url
             }
             write_database(data, self._file_path)
             print(f"Movie {title} was added to the database")
@@ -73,24 +74,24 @@ def open_database(file_path):
                 for lines in data:
                     list_of_lines.append(lines)
                 for line in list_of_lines[1:]:
-                    if line and len(line) == 3:
-                        movie_dict[line[0]] = {"rating":line[1],"year":line[2]}
+                    if line:
+                        movie_dict[line[0]] = {"rating":line[1],"year":line[2], "poster_url":line[3]}
                 return movie_dict
             else:
                 raise Exception("csv file is empty")
     except Exception as e:
-        error_msg = Fore.RED + "Something went wrong when connecting to the database!\n" + str(e)
-        return error_msg
+        print(Fore.RED + "Something went wrong when connecting to the database!\n" + str(e))
+        return []
 
 def write_database(input_data, file_path):
     """
     write data into csv database
     """
-    list_data = [
-        ['Movie', 'Rating', 'Year']
-    ]
+    list_data = []
     for data in input_data:
-        list_data.append([data, input_data[data]["rating"], input_data[data]["year"]])
-    with open(file_path, "w") as fileobj:
+        list_data.append([data, input_data[data]["rating"], input_data[data]["year"], input_data[data]["poster_url"]])
+    with open(file_path, "a", newline="") as fileobj:
         writer = csv.writer(fileobj)
+        if os.path.getsize(file_path) == 0:
+            writer.writerow(["title", "rating", "year", "poster_url"])
         writer.writerows(list_data)

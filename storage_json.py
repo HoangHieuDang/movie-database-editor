@@ -25,12 +25,13 @@ class StorageJson(IStorage):
         movies_dict = open_database(self._file_path)
         return movies_dict
 
-    def add_movie(self, title, year, rating):
+    def add_movie(self, title, year, rating, poster_url):
         data = open_database(self._file_path)
         if title not in data:
             data[title] = {
                 "rating": rating,
-                "year": year
+                "year": year,
+                "poster_url": poster_url
             }
             write_database(data, self._file_path)
             print(f"Movie {title} was added to the database")
@@ -68,13 +69,19 @@ def open_database(file_path):
     try:
         with open(file_path, "r") as fileobj:
             data = json.load(fileobj)
-        if data:
-            return data
-        else:
-            raise Exception("json file is empty")
+            if data:
+                return data
+            else:
+                return {}
+    except FileNotFoundError:
+        print(Fore.RED + f"Error: Database file '{file_path}' not found.")
+        return {}  # Return an empty dictionary if the file is not found
+    except json.JSONDecodeError:
+        print(Fore.RED + f"Error: Database file '{file_path}' contains invalid JSON.")
+        return {}  # Return an empty dictionary if JSON is invalid
     except Exception as e:
-        error_msg = Fore.RED + "Something went wrong when connecting to the database!\n" + str(e)
-        return error_msg
+        print(Fore.RED + "Something went wrong when connecting to the database!\n" + str(e))
+        return {}  # Return empty dictionary for any other unexpected errors
 
 
 def write_database(input_data, file_path):

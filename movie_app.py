@@ -3,10 +3,16 @@ import random
 from thefuzz import process
 import re
 import sys
+import os
 import matplotlib.pyplot as plt
 from storage_json import StorageJson
 from storage_csv import StorageCsv
+import requests
+from dotenv import load_dotenv
 
+#loading environment variables
+load_dotenv()
+OMDB_KEY = os.getenv('OMDB_API_KEY')
 """
 0. Exit
 1. List movies
@@ -47,26 +53,29 @@ class MovieApp:
     def _command_add_movie(self):
         """
         Handles the task of adding a movie into the database
+        Getting the movie from OMDB API and add the movie to the database
         """
         print(Fore.YELLOW + "\n---------------------------")
         print(Fore.YELLOW + "---  Add a movie title  ---")
         print(Fore.YELLOW + "---------------------------\n")
+
         input_title = input(Fore.GREEN + "Please enter the movie title:")
-        while True:
-            try:
-                input_rating = float(input(Fore.GREEN + "Please enter the rating:"))
-                input_year = int(input(Fore.GREEN + "Please enter the year:"))
-                if input_rating < 1 or input_rating > 10:
-                    raise ValueError(Fore.RED + "input_rating out of range [1,10]")
-            except (TypeError, ValueError):
-                print(Fore.RED + "Please enter a rating number between 1 to 10")
-                print(Fore.RED + "Please enter a number for the year")
-            except Exception as error_msg:
-                print(Fore.RED + "Something is wrong!" + str(error_msg))
+        REQUEST_URL = f"https://www.omdbapi.com/?apikey={OMDB_KEY}&t={input_title}"
+        try:
+            response = requests.get(REQUEST_URL)
+        except Exception as e:
+            print("Connection to OMDB API failed!" + str(e))
+        else:
+            res_dict = response.json()
+            if 'Error' in res_dict.keys():
+                print("Error message:" + str(res_dict['Error']))
             else:
-                break
+                input_title = str(res_dict["Title"])
+                input_year = str(res_dict["Year"])
+                input_rating = str(res_dict["imdbRating"])
+                input_poster_url = str(res_dict["Poster"])
         print(Fore.YELLOW)
-        self._storage.add_movie(input_title, input_year, input_rating)
+        self._storage.add_movie(input_title, input_year, input_rating, input_poster_url)
         print(Fore.YELLOW + "---------------------------\n")
         print(Style.RESET_ALL)
 
