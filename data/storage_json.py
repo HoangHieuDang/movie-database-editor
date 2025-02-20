@@ -46,7 +46,8 @@ class StorageJson(IStorage):
             print(f"The movie '{title}' was deleted from the database")
             return True
         else:
-            raise FileNotFoundError(Fore.RED + "The movie doesn't exist in the database!")
+            print(Fore.RED + "The movie doesn't exist in the database!")
+            return False
 
 
     def update_movie(self, title, rating):
@@ -59,7 +60,7 @@ class StorageJson(IStorage):
             write_database(data, self._file_path)
             print(f"the movie '{title}' was updated with the rating of {rating}")
         else:
-            raise FileNotFoundError(Fore.RED + "The movie title doesn't exist in the database")
+            print(Fore.RED + "The movie title doesn't exist in the database")
 
 
 def open_database(file_path):

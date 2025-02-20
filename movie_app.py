@@ -122,7 +122,7 @@ class MovieApp:
                     break
             self._storage.update_movie(input_title, rating)
         else:
-            raise FileNotFoundError(Fore.RED + "The movie title doesn't exist in the database")
+            print(Fore.RED + "The movie title doesn't exist in the database")
         print(Fore.YELLOW + "------------------------\n")
         print(Style.RESET_ALL)
 
@@ -349,7 +349,7 @@ class MovieApp:
         print(f"The rating histogram was saved under {save_file}")
         print(Fore.YELLOW + "--------------------------\n")
         print(Style.RESET_ALL)
-        sys.exit(0)
+
 
     def _command_generate_website(self):
         """
