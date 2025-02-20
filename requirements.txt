@@ -1,0 +1,10 @@
+colorama
+random
+thefuzz
+re
+sys
+os
+matplotlib.pyplot
+requests
+dotenv
+csv
