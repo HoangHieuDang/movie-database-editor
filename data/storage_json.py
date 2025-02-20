@@ -1,4 +1,4 @@
-from istorage import IStorage
+from data.istorage import IStorage
 import json
 import os
 from colorama import Fore

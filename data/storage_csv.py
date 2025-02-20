@@ -1,4 +1,4 @@
-from istorage import IStorage
+from data.istorage import IStorage
 import csv
 import os
 from colorama import Fore

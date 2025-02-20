@@ -1,4 +1,11 @@
+html{
+    height: 100vh;
+    width: 100vw;
+}
+
 body {
+  width: 100%;
+  height: 100%;
   background: #F5F5F0;
   color: black;
   font-family: Monaco;
@@ -22,17 +29,13 @@ body {
 }
 
 .movie-grid li {
-  width: 50%;
-  height: 50%;
+  width: 100%;
+  height: 100%;
   padding: 10px 15px;
   text-align: center;
   font-size: 0.8em;
 }
 
-.poster-img{
-width: 100%;
-height: 100%;
-}
 
 .movie {
   width: 140px;

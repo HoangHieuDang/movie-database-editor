@@ -5,8 +5,8 @@ import re
 import sys
 import os
 import matplotlib.pyplot as plt
-from storage_json import StorageJson
-from storage_csv import StorageCsv
+from data.storage_json import StorageJson
+from data.storage_csv import StorageCsv
 import requests
 from dotenv import load_dotenv
 
@@ -362,7 +362,7 @@ class MovieApp:
         for title, details in data.items():
             movie_grid_html += f"""
             <li class="movie">
-                <img class="poster-img" src="{details['poster_url']}" alt="{title}">
+                <img class="movie-poster" src="{details['poster_url']}" alt="{title}">
                 <h2>{title} ({details['year']})</h2>
                 <p>{details['rating']}</p>
             </li>
