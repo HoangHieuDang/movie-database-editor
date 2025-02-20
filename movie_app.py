@@ -58,7 +58,9 @@ class MovieApp:
         print(Fore.YELLOW + "\n---------------------------")
         print(Fore.YELLOW + "---  Add a movie title  ---")
         print(Fore.YELLOW + "---------------------------\n")
-
+        input_year=""
+        input_rating = ""
+        input_poster_url = ""
         input_title = input(Fore.GREEN + "Please enter the movie title:")
         REQUEST_URL = f"https://www.omdbapi.com/?apikey={OMDB_KEY}&t={input_title}"
         try:
@@ -75,7 +77,11 @@ class MovieApp:
                 input_rating = str(res_dict["imdbRating"])
                 input_poster_url = str(res_dict["Poster"])
         print(Fore.YELLOW)
-        self._storage.add_movie(input_title, input_year, input_rating, input_poster_url)
+        if input_title and input_year and input_rating and input_poster_url:
+            self._storage.add_movie(input_title, input_year, input_rating, input_poster_url)
+        else:
+            print(Fore.RED)
+            print("Can not add movie to database!")
         print(Fore.YELLOW + "---------------------------\n")
         print(Style.RESET_ALL)
 
@@ -355,11 +361,11 @@ class MovieApp:
         movie_grid_html = f""
         for title, details in data.items():
             movie_grid_html += f"""
-            <div class="movie">
-                <img src="{details['poster_url']}" alt="{title}">
+            <li class="movie">
+                <img class="poster-img" src="{details['poster_url']}" alt="{title}">
                 <h2>{title} ({details['year']})</h2>
                 <p>{details['rating']}</p>
-            </div>
+            </li>
             """
         # open the html template and get all html content from the template
         with open("./_static/index_template.html", "r") as fileobj:
@@ -454,3 +460,7 @@ class MovieApp:
         # Execute command
         chosen_function = menu_dispatch_dict[str(user_input)]
         chosen_function()
+        # Always update index.html when functions 2,3,4 are used
+        # Reason: these functions changed the database -> the listing website must be updated automatically
+        if user_input in [2,3,4]:
+            self._command_generate_website()
