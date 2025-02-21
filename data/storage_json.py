@@ -5,6 +5,10 @@ from colorama import Fore
 
 
 class StorageJson(IStorage):
+    """
+    Class StorageJson is a child class from IStorage
+    which handles CRUD Operation on JSON database
+    """
     def __init__(self, file_path):
         try:
             if not os.path.exists(file_path):
@@ -22,10 +26,16 @@ class StorageJson(IStorage):
             print("Can not create Json Storage: " + str(e))
 
     def list_movies(self):
+        """
+        list all movies from database
+        """
         movies_dict = open_database(self._file_path)
         return movies_dict
 
     def add_movie(self, title, year, rating, poster_url):
+        """
+        add movies into database
+        """
         data = open_database(self._file_path)
         if title not in data:
             data[title] = {
@@ -39,6 +49,9 @@ class StorageJson(IStorage):
             print("The title already exists in the database")
 
     def delete_movie(self, title):
+        """
+        delete a movie from database
+        """
         data = open_database(self._file_path)
         if title in data:
             del data[title]

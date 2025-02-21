@@ -3,8 +3,11 @@ import csv
 import os
 from colorama import Fore
 
-
 class StorageCsv(IStorage):
+    """
+    Class StorageCsv is a child class from IStorage
+    which handles CRUD Operation on CSV database
+    """
     def __init__(self, file_path):
         try:
             if not os.path.exists(file_path):
@@ -19,12 +22,16 @@ class StorageCsv(IStorage):
                 raise Exception(".csv file only and make sure that the file exists in current directory!")
         except Exception as e:
             print("Can not create csv Storage: " + str(e))
-
     def list_movies(self):
+        """
+        List all movies from database
+        """
         movies_dict = open_database(self._file_path)
         return movies_dict
-
     def add_movie(self, title, year, rating, poster_url):
+        """
+        Add a movie into database
+        """
         data = open_database(self._file_path)
         if title not in data:
             data[title] = {
@@ -36,8 +43,10 @@ class StorageCsv(IStorage):
             print(f"Movie {title} was added to the database")
         else:
             print("The title already exists in the database")
-
     def delete_movie(self, title):
+        """
+        delete a movie from database
+        """
         data = open_database(self._file_path)
         if title in data:
             del data[title]
@@ -47,7 +56,6 @@ class StorageCsv(IStorage):
         else:
             print(Fore.RED + "The movie doesn't exist in the database!")
             return False
-
     def update_movie(self, title, rating):
         """
         Update the movie information
@@ -59,8 +67,6 @@ class StorageCsv(IStorage):
             print(f"the movie '{title}' was updated with the rating of {rating}")
         else:
             print(Fore.RED + "The movie title doesn't exist in the database")
-
-
 def open_database(file_path):
     """
     open csv database and return the dictionary structure {"Titanic": {"rating": 9.8, "year": 2001}}
@@ -82,8 +88,6 @@ def open_database(file_path):
     except Exception as e:
         print(Fore.RED + "Something went wrong when connecting to the database!\n" + str(e))
         return []
-
-
 def write_database(input_data, file_path):
     """
     write data into csv database

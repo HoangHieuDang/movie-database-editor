@@ -215,11 +215,9 @@ class MovieApp:
                     if not print_question_flag:
                         print("Did you mean:")
                         print_question_flag = True
-                    print(result[0])
-        print(result_print)
+                    print(f"{result[0]} (year:{data[result[0]]['year']}, rating:{data[result[0]]['rating']})")
         print(Fore.YELLOW + "------------------------\n")
         print(Style.RESET_ALL)
-
     def _command_sort_movies_by_rating(self):
         """
         Sort a movie according to its rating in descending order
@@ -235,7 +233,6 @@ class MovieApp:
         print(result_print)
         print(Fore.YELLOW + "-----------------------------------\n")
         print(Style.RESET_ALL)
-
     def _command_movie_sorted_by_year(self):
         """
         Handle sorting movies by year in descending order
@@ -271,7 +268,6 @@ class MovieApp:
         print(result_print)
         print(Fore.YELLOW + "-----------------------------------\n")
         print(Style.RESET_ALL)
-
     def _command_filter_movie(self):
         """
            Handle sorting movies by year in descending order
@@ -306,7 +302,6 @@ class MovieApp:
         print(result_print)
         print(Fore.YELLOW + "-----------------------------------\n")
         print(Style.RESET_ALL)
-
     def _command_rating_histogram(self):
         """
         handling rating_histogram user input and display
@@ -329,28 +324,21 @@ class MovieApp:
         print(Fore.YELLOW)
         # create a histogram of the films ratings
         # get data from database
-
         data = self._storage.list_movies()
         rating_list = [film["rating"] for film in data.values()]
-
         # Plotting a basic histogram
         plt.hist(rating_list, bins=30, color='skyblue', edgecolor='black', stacked=True, align='mid', histtype='bar')
-
         # Adding labels and title
         plt.xlabel('Film Ratings')
         plt.ylabel('Frequency')
         plt.title('Histogram of the film ratings')
-
         # Display the plot
         plt.tight_layout()
         plt.show()
         plt.savefig(save_file)
-
         print(f"The rating histogram was saved under {save_file}")
         print(Fore.YELLOW + "--------------------------\n")
         print(Style.RESET_ALL)
-
-
     def _command_generate_website(self):
         """
         Generate a website to show all movies in the
@@ -370,7 +358,6 @@ class MovieApp:
         # open the html template and get all html content from the template
         with open("./_static/index_template.html", "r") as fileobj:
             html_template_content = fileobj.read()
-
         # replace the generated contents and title
         # with the template holders inside the html template content
         if html_template_content:
@@ -395,11 +382,6 @@ class MovieApp:
                 print("The website is successfully generated!")
         else:
             return "Can not find or open the html_template file"
-
-
-
-
-
     def run(self):
         """
         displaying menu options
@@ -422,9 +404,7 @@ class MovieApp:
          11. Create Rating Histogram
          12. Generate website\n'''
         print(menu_options_print)
-
         # Create a menu dispatcher dictionary
-
         menu_dispatch_dict = {
             "0": exit,
             "1": self._command_list_movies,
