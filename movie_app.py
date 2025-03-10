@@ -141,7 +141,7 @@ class MovieApp:
         4) The worst movie by rating
         """
         data = self._storage.list_movies()
-        rating_list = [info["rating"] for title, info in data.items()]
+        rating_list = [float(info["rating"]) for title, info in data.items()]
         # calculate average rating
         avg_rating = round(sum(rating_list) / len(rating_list), 1)
         # sort the rating list from lowest to highest
@@ -156,10 +156,10 @@ class MovieApp:
             med_rating = sorted_rating_list[len(sorted_rating_list) // 2]
         # The best movie
         best_rating = sorted_rating_list[-1]
-        best_movies_list = [[title, info] for title, info in data.items() if info["rating"] == best_rating]
+        best_movies_list = [[title, info] for title, info in data.items() if float(info["rating"]) == best_rating]
         # The worst movie
         worst_rating = sorted_rating_list[0]
-        worst_movies_list = [[title, info] for title, info in data.items() if info["rating"] == worst_rating]
+        worst_movies_list = [[title, info] for title, info in data.items() if float(info["rating"]) == worst_rating]
         # Displaying the result
         display_str = ""
         display_str += f"Average rating: {avg_rating}\n"
